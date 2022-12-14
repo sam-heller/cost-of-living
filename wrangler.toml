@@ -1,5 +1,7 @@
 name = "cost-of-living"
 main = "src/index.js"
+type = "webpack"
+webpack_config = "webpack.config.js"
 compatibility_date = "2022-12-14"
 d1_databases = [{binding = "COL_DB", database_name = "cost-of-living", database_id = "9e0ca535-2863-4022-aaf9-ee5c35313f0c"}]
 [triggers]
