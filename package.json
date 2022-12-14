@@ -16,7 +16,8 @@
     "scripts": {
         "start": "wrangler dev",
         "deploy": "wrangler publish",
-        "getPopulated": "wrangler d1 execute cost-of-living --command \"SELECT * FROM City WHERE numbeo_id != 0\""
+        "getPopulated": "wrangler d1 execute cost-of-living --command \"SELECT * FROM City WHERE numbeo_id != 0\"",
+        "populatedCount": "wrangler d1 execute cost-of-living --command \"SELECT count(*) FROM City WHERE numbeo_id != 0\""
 
     },
     "dependencies": {

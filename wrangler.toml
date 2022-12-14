@@ -1,16 +1,6 @@
 name = "cost-of-living"
 main = "src/index.js"
-
 compatibility_date = "2022-12-14"
-
-kv_namespaces = [
-    { binding = "COL_KV", id = "a095444c5f4d4c7eb4fc0376b017ead8" }
-]
-d1_databases = [
-    {binding = "COL_DB", database_name = "cost-of-living", database_id = "9e0ca535-2863-4022-aaf9-ee5c35313f0c"}
-]
-
-
-
+d1_databases = [{binding = "COL_DB", database_name = "cost-of-living", database_id = "9e0ca535-2863-4022-aaf9-ee5c35313f0c"}]
 [triggers]
 crons = ["* * * * *"]
