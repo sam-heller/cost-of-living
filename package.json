@@ -1,0 +1,19 @@
+{
+    "name": "cost-of-living",
+    "version": "0.0.1",
+    "devDependencies": {
+        "wrangler": "2.1.9"
+    },
+    "private": true,
+    "author": {
+        "name": "Sam Heller",
+        "email": "sam@faitaccomp.li"
+    },
+    "scripts": {
+        "start": "wrangler dev",
+        "deploy": "wrangler publish"
+    },
+    "dependencies": {
+        "itty-router-extras": "0.4.2"
+    }
+}

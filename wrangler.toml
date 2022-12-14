@@ -1,0 +1,4 @@
+name = "cost-of-living"
+main = "src/index.js"
+compatibility_date = "2022-12-14"
+kv_namespaces = [{ binding = "COST_OF_LIVING", id = "" }]
