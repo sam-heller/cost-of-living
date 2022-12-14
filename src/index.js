@@ -1,27 +1,36 @@
-// import { Router } from 'itty-router'
-import { json, error } from 'itty-router-extras'
+import { json, text } from 'itty-router-extras'
 import { withDecodedParams } from './lib/withDecodedParams';
 import { Router } from 'itty-router';
-import CityCache from './city/list';
+import CityList from './city/list.js';
+import CityDetails from './city/details.js';
 const router = new Router()
 
-router.get('/city-list', async() => {
-    let cities = await new CityCache().buildCityList()
-    return json(cities)
+router.get('/id/:id', withDecodedParams, async({ id }, env, ctx) => {
+    let details = new CityDetails(env);
+    let city = await details.withId(id)
+    return json(city)
 })
 
-router.get('/:country/:city', withDecodedParams, async({ country, city }) => {
-    if (!['USA', 'US'].includes(country.toUpperCase())) {
-        return error(501, "Only Supports US Cities at the moment, sry")
-    }
-    const results = await COST_OF_LIVING.list({ prefix: city.toLowerCase() });
-    let keys = results.keys.map((e) => e.name)
-    let type = keys.length === 1 ? 'city' : 'list'
-    let data = type == 'city' ? await COST_OF_LIVING.get(keys[0], { type: 'json' }) : keys
-    return json({ 'type': type, 'data': data })
+router.get('/search/:query', withDecodedParams, async({ query }, env, ctx) => {
+    let details = new CityDetails(env);
+    const results = await details.startsWith(query)
+    return json(results)
 })
 
-
-addEventListener('fetch', (e) => {
-    e.respondWith(router.handle(e.request))
+router.get('/populate-db', withDecodedParams, async(req, env, ctx) => {
+    let cl = new CityList(env);
+    const resp = await cl.populateDB();
+    return text(resp)
 })
+
+const getDataForSomeRandomCity = async(env) => {
+    let cd = new CityDetails(env);
+    const deets = await cd.random()
+    console.log("Loaded Details for random city", deets)
+    return deets
+}
+
+export default {
+    async scheduled(event, env, ctx) { ctx.waitUntil(getDataForSomeRandomCity(env)) },
+    fetch: router.handle // yep, it's this easy.
+}

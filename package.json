@@ -2,7 +2,11 @@
     "name": "cost-of-living",
     "version": "0.0.1",
     "devDependencies": {
+        "jshint": "2.13.6",
         "wrangler": "2.1.9"
+    },
+    "engines": {
+        "node": ">=18.9.2"
     },
     "private": true,
     "author": {
@@ -11,9 +15,13 @@
     },
     "scripts": {
         "start": "wrangler dev",
-        "deploy": "wrangler publish"
+        "deploy": "wrangler publish",
+        "getPopulated": "wrangler d1 execute cost-of-living --command \"SELECT * FROM City WHERE numbeo_id != 0\""
+
     },
     "dependencies": {
+        "better-sqlite3": "8.0.1",
+        "itty-router": "2.6.6",
         "itty-router-extras": "0.4.2"
     }
 }
