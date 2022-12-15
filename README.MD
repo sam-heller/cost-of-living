@@ -27,6 +27,17 @@ Executed command in ms.
 
 The Numbeo Data is pulled in in incrementally via a cron job running once a minute that is enabled by default, check out the `enrichDataHandler()` method in index.js.
 
+You can control this and other cron tasks via wrangler secrets on the conmmand line 
+```bash
+✨ Success! Uploaded secret enrichLocation
+(base) schema|main⚡ ⇒ wrangler secret put enrichPrices
+ ⛅️ wrangler 2.1.9 (update available 2.6.2)
+Enter a secret value: ******** 
+🌀 Creating the secret for the Worker "cost-of-living" 
+✨ Success! Uploaded secret enrichPrices
+```
+
+
 ### Location Data
 Latitude/Longitude info for the points is pulled down from the reverse-geocode API from api-ninjas.com, free tier gives you 50k requests/month, which is more than what's needed, [register](https://api-ninjas.com/register) and get an api key and then add it as a secret with wrangler 
 ```bash
@@ -39,3 +50,4 @@ Enter a secret value: ****************************************
 (base) cost-of-living|main⚡ ⇒ 
 ```
 This is also invoked from the  `enrichDataHandler()` method in the index.js
+

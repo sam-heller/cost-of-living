@@ -42,10 +42,22 @@ router.get('/', ({res, env, ctx}) => {
 const enrichDataHandler = async(env) => {
     
     // Retries Numbeo price information
-    await enrichPrice(env)
+    // set the value of the enrichPrice secret to "enabled" to run this
+    //
+    //  (base) schema|main⚡ ⇒ wrangler secret put enrichPrice    
+    if (env.enrichPrice === "enabled"){
+        await enrichPrice(env)        
+    }
+
 
     // Retrieves Lat/Long information for cities
-    await enrichLocation(env)
+    // set the value of the enrichLocation secret to "enabled" to run this
+    //
+    //  (base) schema|main⚡ ⇒ wrangler secret put enrichLocation
+    if (env.enrichLocation === "enabled"){
+        await enrichLocation(env)
+    }
+    
 }
 
 
@@ -63,6 +75,7 @@ const enrichPrice = async (env, iterations=5) => {
     let factory = new CityFactory(env)
     for (let x=0;x<=iterations;x++){
         let rand = await factory.randomUnpopulated()
+        console.log(`Enriched Prices for ${rand.name}, ${rand.region}`)
     }
 }
 
