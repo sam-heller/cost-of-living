@@ -56,10 +56,9 @@ export default class City {
     async geoCode(api_key, db){
         let coder = new Geocode(api_key)
         let location = await coder.getLatLon(this)
-        location = location.shift()
+        location = location.filter((loc) => {return (this.name == loc.name) &&( this.state === this.state)})
         let update = await db.prepare("UPDATE City SET lat=?, lon=? WHERE id=?")
-            .bind(location.latitude, location.longitude, this.id)
-            .run()
+            .bind(location.latitude, location.longitude, this.id).run()
         if (update.success){
             console.log(`Geocoded ${this.name}, ${this.region} to ${location.latitude}, ${location.longitude}` )
         } else {

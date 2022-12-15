@@ -27,6 +27,7 @@ export default class NumbeoDetailsScraper {
         let categorized = []
         for (let row of scraperResults[this.table_selector]) {
             switch (row.length) {
+                case 0: break;
                 case 1:
                     currentKey = row[0]
                     break;
