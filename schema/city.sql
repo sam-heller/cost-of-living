@@ -4,7 +4,9 @@ CREATE TABLE City (
     `numbeo_id` INTEGER DEFAULT 0,
     `name` TEXT NOT NULL, 
     `region` TEXT NOT NULL, 
-    `country` TEXT NOT NULL DEFAULT 'US'
+    `country` TEXT NOT NULL DEFAULT 'US',
+    `lat` INTEGER DEFAULT 0,
+    `lon` INTEGER DEFAULT 0
 );
 
 INSERT INTO City (`name`, `region`) VALUES("Aberdeen", "SD");

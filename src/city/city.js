@@ -1,4 +1,5 @@
 import NumbeoCitySearch from "../numbeo/CitySearch"
+import Geocode from "../lib/Geocode"
 export default class City {
 
     constructor(data, prices = {}) {
@@ -7,7 +8,10 @@ export default class City {
         this.region = data.region || ''
         this.country = data.country || ''
         this.numbeo_id = data.numbeo_id || 0
+        this.lat = data.lat || 0
+        this.lon = data.lon || 0
         this.prices = prices
+        
     }
 
     toJson() {
@@ -17,6 +21,8 @@ export default class City {
             region: this.region,
             country: this.country,
             numbeo_id: this.numbeo_id,
+            lat: this.lat, 
+            lon: this.lon,
             prices: this.prices
         }
     }
@@ -44,5 +50,20 @@ export default class City {
             if (!updated.success) console.log(updated.error)
         }
         console.log(`Updated ${this.id} with ${this.prices.length} records`)
+    }
+
+    async geoCode(api_key, db){
+        let coder = new Geocode(api_key)
+        let location = await coder.getLatLon(this)
+        location = location.shift()
+        let update = await db.prepare("UPDATE City SET lat=?, lon=? WHERE id=?")
+            .bind(location.latitude, location.longitude, this.id)
+            .run()
+        if (update.success){
+            console.log(`Geocoded ${this.name}, ${this.region} to ${location.latitude}, ${location.longitude}` )
+        } else {
+            console.log(`Geocoding Error`, update.error)
+        }
+        
     }
 }

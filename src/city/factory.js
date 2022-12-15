@@ -1,4 +1,4 @@
-import City from "./city.js"
+import City from "./City.js"
 import NumbeoDetailsScraper from "../numbeo/DetailsScraper"
 
 export default class CityFactory {
@@ -32,9 +32,20 @@ export default class CityFactory {
         return await this.fromId(id)
     }
 
+    async randomWithoutLatlong(){
+        const stmt = this.db.prepare(`SELECT id FROM City WHERE lat = 0  OR lat IS NULL ORDER BY RANDOM() LIMIT 1`)
+        const id = await stmt.first('id')
+        return await(this.fromId(id, false))
+    }
+
+    async forMap(){
+        const stmt = this.db.prepare(`SELECT * FROM City WHERE lat IS NOT NULL`)
+        const results = await stmt.all()
+        return results.results ? results.results : []
+    }
+
     async cityData(id) {
         return await this.db.prepare("SELECT * FROM City WHERE id = ?").bind(id).first()
-
     }
 
     async detailsData(id) {
