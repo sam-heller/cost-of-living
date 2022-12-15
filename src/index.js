@@ -15,7 +15,7 @@ router.get('/id/:id', withDecodedParams, async({ id }, env, ctx) => {
     return json(city)
 })
 
-router.get('/rent/:format', withDecodedParams, async( req, env, ctx)=>{
+router.get('/rent/:format', withDecodedParams, async( {format}, env, ctx)=>{
     let sql = "SELECT City.name as city, City.region as state, Price.average_price FROM Price LEFT JOIN City ON City.id = Price.city_id WHERE category='Rent Per Month' AND Price.name LIKE '%1 bedroom%in City%'"
     let results = await env.COL_DB.prepare(sql).bind().all()
     if (format == 'json') return json(results.results)
@@ -39,13 +39,18 @@ router.get('/', ({res, env, ctx}) => {
 })
 
 
-const getDataForSomeRandomCity = async(env) => {
-    // return await enrichLocation(env)
+const enrichDataHandler = async(env) => {
+    
+    // Retries Numbeo price information
+    await enrichPrice(env)
+
+    // Retrieves Lat/Long information for cities
+    await enrichLocation(env)
 }
 
 
 // run in the getData method to run loader for lat/long data
-const enrichLocation = async (env, iterations=50) => {
+const enrichLocation = async (env, iterations=5) => {
     let factory = new CityFactory(env)
     for (let x=0;x<=iterations;x++){
         let rand = await factory.randomWithoutLatlong()
@@ -61,7 +66,8 @@ const enrichPrice = async (env, iterations=5) => {
     }
 }
 
+
 export default {
-    async scheduled(event, env, ctx) { ctx.waitUntil(getDataForSomeRandomCity(env)) },
+    async scheduled(event, env, ctx) { ctx.waitUntil(enrichDataHandler(env)) },
     fetch: router.handle
 }

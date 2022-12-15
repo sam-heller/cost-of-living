@@ -39,7 +39,7 @@ export default class CityFactory {
     }
 
     async forMap(){
-        const stmt = this.db.prepare(`SELECT * FROM City WHERE lat IS NOT NULL`)
+        const stmt = this.db.prepare(`SELECT City.id, City.name, City.region as state, City.lat, City.lon, CAST(REPLACE(Price.average_price, ',', '') as INTEGER) as price FROM City JOIN Price on Price.city_id = City.id WHERE Price.name LIKE '%1 bedroom%in City%' AND City.lat IS NOT NULL`)
         const results = await stmt.all()
         return results.results ? results.results : []
     }
