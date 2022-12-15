@@ -9,7 +9,7 @@ export default class NumbeoDetailsScraper {
 
     detailsHref(city) {
         let detailsUrl = new URL(this.detailRedirect)
-        detailsUrl.searchParams.set('city_id', city.numbeo_id)
+        detailsUrl.searchParams.set('city_id', city.numbeo_id) 
         detailsUrl.searchParams.set('where', this.detailPrefix)
         return detailsUrl.href
     }
