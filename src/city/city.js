@@ -38,6 +38,7 @@ export default class City {
             .bind(this.numbeo_id, this.id)
             .run()
         if (!updated.success) console.log(updated.error)
+        console.log('set numbeo id to ', this.numbeo_id, 'for id', this.id)
     }
 
     async savePrices(db) {

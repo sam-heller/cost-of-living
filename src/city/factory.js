@@ -10,20 +10,36 @@ export default class CityFactory {
         let data = await this.cityData(id)
         if (!withDetails) return new City(data)
 
-        let prices = await this.detailsData(id)
-        if (prices.length >= 1) return new City(data, prices)
-
-        let city = new City(data)
-        if (city.numbeo_id == 0) {
-            await city.loadNumbeoID()
-            await city.saveNumbeoId(this.db)
+        try {
+            let prices = await this.detailsData(id)
+            if (prices.length >= 2) return new City(data, prices)
+        } catch (e){
+            console.log("Error Loading Prices", e)
         }
 
-        let scraper = new NumbeoDetailsScraper()
-        city.prices = await scraper.scrapeDetails(city)
+        try {
+            let city = new City(data)
+            if (city.numbeo_id == 0) {
+                await city.loadNumbeoID()
+                await city.saveNumbeoId(this.db)
+            }
+        } catch (e){
+            console.log('Error loading numbeo id', e)
+        }
 
-        await city.savePrices(this.db)
-        return city
+        try {
+            let data = await this.cityData(id)
+            let city = new City(data)
+            if (city.numbeo_id == -1) return city;
+            let scraper = new NumbeoDetailsScraper()
+            city.prices = await scraper.scrapeDetails(city)
+            await city.savePrices(this.db)
+        } catch (e){
+            console.log("Error scraping numbeo details", e)
+        }
+        
+        let finalData = await this.cityData(id)
+        return new City(finalData)
     }
 
     async randomUnpopulated() {
